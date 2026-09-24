@@ -1,0 +1,359 @@
+import React, { useState } from "react"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { apiClient } from "@/lib/api/client"
+import {
+  Users as UsersIcon,
+  Search,
+  Plus,
+  MoreHorizontal,
+  Trash2,
+  Shield,
+  User as UserIcon,
+  CheckCircle2,
+  XCircle,
+  RefreshCw,
+} from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
+import { toast } from "react-toastify"
+
+interface UserItem {
+  id: string
+  name: string | null
+  firstName?: string | null
+  lastName?: string | null
+  email: string
+  emailVerified: boolean
+  role: "ADMIN" | "USER"
+  createdAt: string
+  image?: string | null
+}
+
+const Users: React.FC = () => {
+  const queryClient = useQueryClient()
+  const [searchTerm, setSearchTerm] = useState("")
+  const [roleFilter, setRoleFilter] = useState<string>("ALL")
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [newUser, setNewUser] = useState({ name: "", email: "", password: "", role: "USER" })
+
+  const { data, isLoading, refetch, isRefetching } = useQuery<{ data: UserItem[] }>({
+    queryKey: ["admin", "users", roleFilter],
+    queryFn: async () => {
+      const res = await apiClient.get("/users")
+      return res.data?.data ? res.data : { data: res.data || [] }
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiClient.delete(`/users/${id}`)
+    },
+    onSuccess: () => {
+      toast.success("User removed successfully")
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] })
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to remove user")
+    },
+  })
+
+  const createMutation = useMutation({
+    mutationFn: async (payload: typeof newUser) => {
+      await apiClient.post("/users", payload)
+    },
+    onSuccess: () => {
+      toast.success("User created successfully")
+      setCreateDialogOpen(false)
+      setNewUser({ name: "", email: "", password: "", role: "USER" })
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] })
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to create user")
+    },
+  })
+
+  const users = data?.data || []
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch =
+      (u.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesRole = roleFilter === "ALL" || u.role === roleFilter
+    return matchesSearch && matchesRole
+  })
+
+  return (
+    <div className="space-y-6">
+      {/* Header section */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2.5">
+            <UsersIcon className="h-7 w-7 text-primary" />
+            <span>User Management</span>
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Manage system accounts, roles, access permissions, and account statuses.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+            className="cursor-pointer gap-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefetching ? "animate-spin" : ""}`} />
+            <span>Refresh</span>
+          </Button>
+
+          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="gap-2 cursor-pointer">
+                <Plus className="h-4 w-4" />
+                <span>Add User</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Create New User</DialogTitle>
+                <DialogDescription>
+                  Enter account credentials and assign access permissions.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    placeholder="Jane Doe"
+                    value={newUser.name}
+                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="user@example.com"
+                    value={newUser.email}
+                    onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Select
+                    value={newUser.role}
+                    onValueChange={(val) => setNewUser({ ...newUser, role: val })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USER">User</SelectItem>
+                      <SelectItem value="ADMIN">Administrator</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setCreateDialogOpen(false)}
+                  type="button"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => createMutation.mutate(newUser)}
+                  disabled={createMutation.isPending || !newUser.email}
+                >
+                  {createMutation.isPending ? "Creating…" : "Save User"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <Card className="border border-border/80 shadow-xs">
+        <CardContent className="p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name or email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="All Roles" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">All Roles</SelectItem>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                  <SelectItem value="USER">User</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Users Table */}
+      <Card className="border border-border/80 shadow-xs">
+        <CardHeader className="px-6 py-4 border-b border-border/60">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base font-semibold">Registered Accounts</CardTitle>
+              <CardDescription>
+                Showing {filteredUsers.length} total user accounts
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-[280px]">User</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Verification</TableHead>
+                <TableHead>Created Date</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                    <div className="flex items-center justify-center gap-2">
+                      <RefreshCw className="h-4 w-4 animate-spin text-primary" />
+                      <span>Loading accounts…</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : filteredUsers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                    No users matching your criteria found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-xs shrink-0">
+                          {user.name ? user.name.slice(0, 2).toUpperCase() : user.email.slice(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="font-medium text-foreground">
+                            {user.name || "Unnamed User"}
+                          </div>
+                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={user.role === "ADMIN" ? "default" : "secondary"}
+                        className="gap-1 font-medium"
+                      >
+                        {user.role === "ADMIN" ? (
+                          <Shield className="h-3 w-3" />
+                        ) : (
+                          <UserIcon className="h-3 w-3" />
+                        )}
+                        <span>{user.role}</span>
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {user.emailVerified ? (
+                        <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          <span>Verified</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium">
+                          <XCircle className="h-3.5 w-3.5" />
+                          <span>Pending</span>
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              navigator.clipboard.writeText(user.email)
+                              toast.info("Email copied to clipboard")
+                            }}
+                            className="cursor-pointer"
+                          >
+                            Copy Email
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer gap-2"
+                            onClick={() => {
+                              if (confirm(`Are you sure you want to remove ${user.email}?`)) {
+                                deleteMutation.mutate(user.id)
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span>Delete User</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+export default Users
