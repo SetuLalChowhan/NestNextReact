@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import { Link } from "react-router-dom"
-import { cn } from "@/lib/utils"
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import {
   Info,
   AlertTriangle,
@@ -9,34 +9,67 @@ import {
   FileUp,
   FileSpreadsheet,
   Check,
-  ChevronDown,
   Clock,
   UserCheck,
   ShieldCheck,
   Database,
   ArrowRight,
-  HelpCircle,
   AlertCircle,
   Eye,
   Trash2,
   FolderKanban,
   Flame,
   Sliders,
-} from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MultiSelect, type OptionType } from "@/components/ui/MultiSelect"
-import { DatePicker } from "@/components/ui/date-picker"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MultiSelect, type OptionType } from "@/components/ui/MultiSelect";
+import { DatePicker } from "@/components/ui/date-picker";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
+import { Slider } from "@/components/ui/slider";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -46,46 +79,93 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 const COMPONENT_OPTIONS: OptionType[] = [
   { label: "React JS", value: "react" },
   { label: "Tailwind CSS", value: "tailwind" },
   { label: "shadcn/ui", value: "shadcn" },
   { label: "Recharts", value: "recharts" },
-]
+];
 
 // --- Mock FAQ/Accordion Items ---
 const FAQ_ITEMS = [
-  { q: "How do I switch layout theme modes?", a: "Go to the Settings page, navigate to Preferences, and update the Theme selection menu between Light, Dark, and System states." },
-  { q: "How is form validation configured?", a: "Forms are controlled via react-hook-form, bound to client-side input validations using standard Zod schemas." },
-]
+  {
+    id: "item-1",
+    q: "How do I switch layout theme modes?",
+    a: "Go to the Settings page, navigate to Preferences, and update the Theme selection menu between Light, Dark, and System states.",
+  },
+  {
+    id: "item-2",
+    q: "How is form validation configured?",
+    a: "Forms are controlled via react-hook-form, bound to client-side input validations using standard Zod schemas.",
+  },
+];
 
 // --- Mock Audit Logs Table Data ---
 const AUDIT_LOGS = [
-  { id: "LOG-5421", action: "AUTH_LOGIN", status: "SUCCESS", ip: "192.168.1.1", user: "setu@example.com", time: "2026-07-08 10:15" },
-  { id: "LOG-5422", action: "API_ROTATE", status: "WARNING", ip: "10.0.0.4", user: "system_cron", time: "2026-07-08 10:10" },
-  { id: "LOG-5423", action: "DB_BACKUP", status: "SUCCESS", ip: "localhost", user: "db_admin", time: "2026-07-08 04:00" },
-]
+  {
+    id: "LOG-5421",
+    action: "AUTH_LOGIN",
+    status: "SUCCESS",
+    ip: "192.168.1.1",
+    user: "setu@example.com",
+    time: "2026-07-08 10:15",
+  },
+  {
+    id: "LOG-5422",
+    action: "API_ROTATE",
+    status: "WARNING",
+    ip: "10.0.0.4",
+    user: "system_cron",
+    time: "2026-07-08 10:10",
+  },
+  {
+    id: "LOG-5423",
+    action: "DB_BACKUP",
+    status: "SUCCESS",
+    ip: "localhost",
+    user: "db_admin",
+    time: "2026-07-08 04:00",
+  },
+];
 
 // --- Mock Team Member Data ---
 const TEAM_MEMBERS = [
-  { name: "Setu Lal", role: "Lead Engineer", status: "Active", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=64&auto=format&fit=crop" },
-  { name: "Sarah Connor", role: "UI Designer", status: "In Meeting", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=64&auto=format&fit=crop" },
-  { name: "John Doe", role: "DevOps specialist", status: "Offline", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=64&auto=format&fit=crop" },
-]
+  {
+    name: "Setu Lal",
+    role: "Lead Engineer",
+    status: "Active",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=64&auto=format&fit=crop",
+  },
+  {
+    name: "Sarah Connor",
+    role: "UI Designer",
+    status: "In Meeting",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=64&auto=format&fit=crop",
+  },
+  {
+    name: "John Doe",
+    role: "DevOps specialist",
+    status: "Offline",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=64&auto=format&fit=crop",
+  },
+];
 
 // --- Mock Projects Board Table Data ---
 interface ProjectItem {
-  id: string
-  name: string
-  logo: string
-  category: string
-  ownerName: string
-  ownerAvatar: string
-  ownerEmail: string
-  status: "active" | "review" | "paused"
-  progress: number
+  id: string;
+  name: string;
+  logo: string;
+  category: string;
+  ownerName: string;
+  ownerAvatar: string;
+  ownerEmail: string;
+  status: "active" | "review" | "paused";
+  progress: number;
 }
 
 const PROJECTS_DATA: ProjectItem[] = [
@@ -95,7 +175,8 @@ const PROJECTS_DATA: ProjectItem[] = [
     logo: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=64&auto=format&fit=crop",
     category: "Web Application",
     ownerName: "Setu Lal",
-    ownerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=64&auto=format&fit=crop",
+    ownerAvatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=64&auto=format&fit=crop",
     ownerEmail: "setu@example.com",
     status: "active",
     progress: 82,
@@ -106,7 +187,8 @@ const PROJECTS_DATA: ProjectItem[] = [
     logo: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=64&auto=format&fit=crop",
     category: "Infrastructure Services",
     ownerName: "Sarah Connor",
-    ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=64&auto=format&fit=crop",
+    ownerAvatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=64&auto=format&fit=crop",
     ownerEmail: "sarah@example.com",
     status: "review",
     progress: 45,
@@ -117,91 +199,96 @@ const PROJECTS_DATA: ProjectItem[] = [
     logo: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=64&auto=format&fit=crop",
     category: "iOS/Android Apps",
     ownerName: "John Doe",
-    ownerAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=64&auto=format&fit=crop",
+    ownerAvatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=64&auto=format&fit=crop",
     ownerEmail: "john@example.com",
     status: "paused",
     progress: 15,
   },
-]
+];
 
 const ComponentsShowcase: React.FC = () => {
   // Demo states
-  const [selectedMulti, setSelectedMulti] = useState<string[]>(["react", "shadcn"])
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [alertDialogOpen, setAlertDialogOpen] = useState(false)
-  const [radioVal, setRadioVal] = useState("option-1")
-  const [switchVal, setSwitchVal] = useState(true)
-  const [checkboxVal, setCheckboxVal] = useState(false)
-  const [selectVal, setSelectVal] = useState("standard")
-  const [isLoadingDemo, setIsLoadingDemo] = useState(false)
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
-  
-  // Custom Slider state
-  const [sliderVal, setSliderVal] = useState(65)
+  const [selectedMulti, setSelectedMulti] = useState<string[]>([
+    "react",
+    "shadcn",
+  ]);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [radioVal, setRadioVal] = useState("option-1");
+  const [switchVal, setSwitchVal] = useState(true);
+  const [checkboxVal, setCheckboxVal] = useState(false);
+  const [selectVal, setSelectVal] = useState("standard");
+  const [isLoadingDemo, setIsLoadingDemo] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Range Slider state (using number array for Shadcn Slider compatibility)
+  const [sliderVal, setSliderVal] = useState<number[]>([65]);
 
   // Project Table state
-  const [selectedProjects, setSelectedProjects] = useState<string[]>([])
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
 
   // Dropzone Simulator states
-  const [uploadedFile, setUploadedFile] = useState<string | null>(null)
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
-
-  // Accordion active indexes
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null)
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   const showToast = (msg: string) => {
-    setToastMessage(msg)
-    setTimeout(() => setToastMessage(null), 3000)
-  }
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const triggerLoading = () => {
-    setIsLoadingDemo(true)
-    setTimeout(() => setIsLoadingDemo(false), 2000)
-  }
+    setIsLoadingDemo(true);
+    setTimeout(() => setIsLoadingDemo(false), 2000);
+  };
 
   // Trigger Simulated File Upload
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      setUploadedFile(file.name)
-      setUploadProgress(0)
-      
+      setUploadedFile(file.name);
+      setUploadProgress(0);
+
       const interval = setInterval(() => {
         setUploadProgress((prev) => {
-          if (prev === null) return 0
+          if (prev === null) return 0;
           if (prev >= 100) {
-            clearInterval(interval)
-            showToast(`${file.name} uploaded successfully!`)
-            return 100
+            clearInterval(interval);
+            showToast(`${file.name} uploaded successfully!`);
+            return 100;
           }
-          return prev + 20
-        })
-      }, 200)
+          return prev + 20;
+        });
+      }, 200);
     }
-  }
+  };
 
   const handleSelectAllProjects = (checked: boolean) => {
     if (checked) {
-      setSelectedProjects(PROJECTS_DATA.map((p) => p.id))
+      setSelectedProjects(PROJECTS_DATA.map((p) => p.id));
     } else {
-      setSelectedProjects([])
+      setSelectedProjects([]);
     }
-  }
+  };
 
   const handleSelectProject = (id: string, checked: boolean) => {
     if (checked) {
-      setSelectedProjects([...selectedProjects, id])
+      setSelectedProjects([...selectedProjects, id]);
     } else {
-      setSelectedProjects(selectedProjects.filter((p) => p !== id))
+      setSelectedProjects(selectedProjects.filter((p) => p !== id));
     }
-  }
+  };
 
   return (
     <div className="space-y-8">
       {/* Page Header */}
       <div>
-        <h2 className="text-3xl font-extrabold tracking-tight text-foreground">UI Components Catalog</h2>
+        <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
+          UI Components Catalog
+        </h2>
         <p className="text-sm text-muted-foreground mt-0.5">
           Interactive developer playground showcasing every UI primitive and advanced telemetry layouts.
         </p>
@@ -215,58 +302,60 @@ const ComponentsShowcase: React.FC = () => {
         </div>
       )}
 
-      {/* 1. Alert Callouts & Banners Section */}
-      <Card className="border border-border/70 shadow-sm">
+      {/* 1. Alert Callouts & Banners Section using Shadcn Alert Component */}
+      <Card className="border border-border/70 shadow-2xs">
         <CardHeader>
           <CardTitle className="text-base font-bold">Callouts & Alert Banners</CardTitle>
-          <CardDescription className="text-xs">Contextual message containers for user alerts.</CardDescription>
+          <CardDescription className="text-xs">
+            Contextual message containers for user alerts using Shadcn Alert primitives.
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2">
-          <div className="flex items-start gap-3 p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
-            <CheckCircle className="h-4.5 w-4.5 shrink-0 text-emerald-600" />
-            <div>
-              <span className="font-bold">Operational Success</span>
-              <p className="text-emerald-700/90 mt-0.5">Settings have been securely committed to local storage cache.</p>
-            </div>
-          </div>
+          <Alert variant="success">
+            <CheckCircle className="h-4 w-4" />
+            <AlertTitle>Operational Success</AlertTitle>
+            <AlertDescription>
+              Settings have been securely committed to local storage cache.
+            </AlertDescription>
+          </Alert>
 
-          <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs">
-            <AlertTriangle className="h-4.5 w-4.5 shrink-0 text-amber-600" />
-            <div>
-              <span className="font-bold">Pending Synchronizations</span>
-              <p className="text-amber-700/90 mt-0.5">2 files are queued for cloud backup integration pipeline.</p>
-            </div>
-          </div>
+          <Alert variant="warning">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Pending Synchronizations</AlertTitle>
+            <AlertDescription>
+              2 files are queued for cloud backup integration pipeline.
+            </AlertDescription>
+          </Alert>
 
-          <div className="flex items-start gap-3 p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs">
-            <AlertCircle className="h-4.5 w-4.5 shrink-0 text-rose-600" />
-            <div>
-              <span className="font-bold">Security Discrepancies</span>
-              <p className="text-rose-700/90 mt-0.5">Authentication keys require manual rotation configurations.</p>
-            </div>
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Security Discrepancies</AlertTitle>
+            <AlertDescription>
+              Authentication keys require manual rotation configurations.
+            </AlertDescription>
+          </Alert>
 
-          <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-xs">
-            <Info className="h-4.5 w-4.5 shrink-0 text-blue-600" />
-            <div>
-              <span className="font-bold">Operational Logs Cache</span>
-              <p className="text-blue-700/90 mt-0.5">Automatic rotations occur on weekly schedules.</p>
-            </div>
-          </div>
+          <Alert variant="info">
+            <Info className="h-4 w-4" />
+            <AlertTitle>Operational Logs Cache</AlertTitle>
+            <AlertDescription>
+              Automatic rotations occur on weekly schedules.
+            </AlertDescription>
+          </Alert>
         </CardContent>
       </Card>
 
       {/* ========================================================
           2. COMPREHENSIVE DATA TABLES WITH IMAGES & DETAILS
          ======================================================== */}
-      <Card className="border border-border/70 shadow-sm">
+      <Card className="border border-border/70 shadow-2xs">
         <CardHeader>
           <CardTitle className="text-base font-bold flex items-center gap-2">
             <FolderKanban className="h-5 w-5 text-primary" />
             Comprehensive Projects Board
           </CardTitle>
           <CardDescription className="text-xs">
-            A proper data table showcasing images, progress meters, badge statuses, and item descriptions.
+            A proper data table showcasing images, Shadcn Progress meters, badge statuses, and item descriptions.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -289,7 +378,7 @@ const ComponentsShowcase: React.FC = () => {
             </TableHeader>
             <TableBody>
               {PROJECTS_DATA.map((project) => {
-                const isSelected = selectedProjects.includes(project.id)
+                const isSelected = selectedProjects.includes(project.id);
                 return (
                   <TableRow key={project.id} data-state={isSelected ? "selected" : undefined}>
                     <TableCell>
@@ -301,11 +390,12 @@ const ComponentsShowcase: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <img
-                          src={project.logo}
-                          alt={project.name}
-                          className="h-10 w-10 rounded-lg border border-border/60 object-cover shrink-0"
-                        />
+                        <Avatar className="h-10 w-10 rounded-lg border border-border/60">
+                          <AvatarImage src={project.logo} alt={project.name} className="object-cover" />
+                          <AvatarFallback className="rounded-lg text-xs font-bold">
+                            {project.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className="min-w-0">
                           <span className="text-sm font-bold text-foreground block truncate">{project.name}</span>
                           <span className="text-xs text-muted-foreground block truncate">{project.category}</span>
@@ -314,11 +404,12 @@ const ComponentsShowcase: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2.5">
-                        <img
-                          src={project.ownerAvatar}
-                          alt={project.ownerName}
-                          className="h-7 w-7 rounded-full object-cover border border-border"
-                        />
+                        <Avatar className="h-7 w-7 border border-border">
+                          <AvatarImage src={project.ownerAvatar} alt={project.ownerName} className="object-cover" />
+                          <AvatarFallback className="text-[10px] font-bold">
+                            {project.ownerName.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className="min-w-0">
                           <span className="text-xs font-semibold text-foreground block truncate">{project.ownerName}</span>
                           <span className="text-[10px] text-muted-foreground block truncate">{project.ownerEmail}</span>
@@ -326,24 +417,22 @@ const ComponentsShowcase: React.FC = () => {
                       </div>
                     </TableCell>
                     <TableCell className="w-48">
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         <div className="flex justify-between text-[10px] font-semibold">
                           <span className="text-muted-foreground">Progress</span>
                           <span className="text-foreground">{project.progress}%</span>
                         </div>
-                        <div className="w-full bg-muted h-1.5 rounded-full overflow-hidden">
-                          <div
-                            className={cn(
-                              "h-full rounded-full transition-all",
-                              project.progress > 70
-                                ? "bg-emerald-500"
-                                : project.progress > 40
-                                ? "bg-amber-500"
-                                : "bg-rose-500"
-                            )}
-                            style={{ width: `${project.progress}%` }}
-                          />
-                        </div>
+                        <Progress
+                          value={project.progress}
+                          className="h-1.5"
+                          indicatorClassName={
+                            project.progress > 70
+                              ? "bg-emerald-500"
+                              : project.progress > 40
+                              ? "bg-amber-500"
+                              : "bg-rose-500"
+                          }
+                        />
                       </div>
                     </TableCell>
                     <TableCell>
@@ -363,16 +452,26 @@ const ComponentsShowcase: React.FC = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1.5">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer" onClick={() => showToast(`Viewing ${project.name}`)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-pointer"
+                          onClick={() => showToast(`Viewing ${project.name}`)}
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer" onClick={() => showToast(`Delete action on ${project.name}`)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 cursor-pointer"
+                          onClick={() => showToast(`Delete action on ${project.name}`)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })}
             </TableBody>
           </Table>
@@ -384,10 +483,17 @@ const ComponentsShowcase: React.FC = () => {
          ======================================================== */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Card Type 1: User Profile Card */}
-        <Card className="border border-border/70 shadow-sm overflow-hidden flex flex-col justify-between">
+        <Card className="border border-border/70 shadow-2xs overflow-hidden flex flex-col justify-between">
           <div className="h-20 bg-gradient-to-r from-primary to-primary/60 relative w-full shrink-0">
-            <div className="absolute -bottom-7 left-6 h-14 w-14 rounded-full border-2 border-background overflow-hidden bg-muted">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=128&auto=format&fit=crop" alt="User Card Profile" className="h-full w-full object-cover" />
+            <div className="absolute -bottom-7 left-6">
+              <Avatar className="h-14 w-14 border-2 border-background shadow-xs">
+                <AvatarImage
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=128&auto=format&fit=crop"
+                  alt="User Card Profile"
+                  className="object-cover"
+                />
+                <AvatarFallback>SL</AvatarFallback>
+              </Avatar>
             </div>
           </div>
           <CardContent className="pt-9 pb-4 px-6 flex-1">
@@ -398,16 +504,32 @@ const ComponentsShowcase: React.FC = () => {
             </p>
           </CardContent>
           <CardFooter className="border-t bg-muted/20 px-6 py-3 flex gap-2 justify-end">
-            <Button size="sm" variant="outline" className="h-8 text-xs font-semibold cursor-pointer" onClick={() => showToast("Profile settings opened!")}>Configure</Button>
-            <Button size="sm" className="h-8 text-xs font-semibold cursor-pointer" onClick={() => showToast("Direct connection request sent!")}>Connect</Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 text-xs font-semibold cursor-pointer"
+              onClick={() => showToast("Profile settings opened!")}
+            >
+              Configure
+            </Button>
+            <Button
+              size="sm"
+              className="h-8 text-xs font-semibold cursor-pointer"
+              onClick={() => showToast("Direct connection request sent!")}
+            >
+              Connect
+            </Button>
           </CardFooter>
         </Card>
 
         {/* Card Type 2: Project Metric/Summary Card */}
-        <Card className="border border-border/70 shadow-sm flex flex-col justify-between">
+        <Card className="border border-border/70 shadow-2xs flex flex-col justify-between">
           <CardHeader className="pb-3">
             <div className="flex justify-between items-start">
-              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 border-emerald-200">
+              <Badge
+                variant="outline"
+                className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 border-emerald-200"
+              >
                 In Progress
               </Badge>
               <Flame className="h-4.5 w-4.5 text-primary" />
@@ -420,15 +542,24 @@ const ComponentsShowcase: React.FC = () => {
               <span className="text-muted-foreground">API Sync Status</span>
               <span className="text-foreground">78% Complete</span>
             </div>
-            <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
-              <div className="bg-primary h-full rounded-full" style={{ width: "78%" }} />
-            </div>
+            <Progress value={78} className="h-2" />
             {/* Avatar Group */}
             <div className="flex -space-x-2 mt-4 overflow-hidden">
-              <img className="inline-block h-6.5 w-6.5 rounded-full ring-2 ring-background object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=64&auto=format&fit=crop" alt="Member A" />
-              <img className="inline-block h-6.5 w-6.5 rounded-full ring-2 ring-background object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=64&auto=format&fit=crop" alt="Member B" />
-              <img className="inline-block h-6.5 w-6.5 rounded-full ring-2 ring-background object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=64&auto=format&fit=crop" alt="Member C" />
-              <div className="inline-flex items-center justify-center h-6.5 w-6.5 rounded-full ring-2 ring-background bg-muted text-[9px] font-bold text-muted-foreground">+2</div>
+              <Avatar className="h-6.5 w-6.5 ring-2 ring-background">
+                <AvatarImage src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=64&auto=format&fit=crop" />
+                <AvatarFallback className="text-[9px]">A</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-6.5 w-6.5 ring-2 ring-background">
+                <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=64&auto=format&fit=crop" />
+                <AvatarFallback className="text-[9px]">B</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-6.5 w-6.5 ring-2 ring-background">
+                <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=64&auto=format&fit=crop" />
+                <AvatarFallback className="text-[9px]">C</AvatarFallback>
+              </Avatar>
+              <div className="inline-flex items-center justify-center h-6.5 w-6.5 rounded-full ring-2 ring-background bg-muted text-[9px] font-bold text-muted-foreground">
+                +2
+              </div>
             </div>
           </CardContent>
           <CardFooter className="border-t bg-muted/20 px-6 py-3 flex items-center justify-between text-xs text-muted-foreground">
@@ -440,9 +571,11 @@ const ComponentsShowcase: React.FC = () => {
         </Card>
 
         {/* Card Type 3: Tier/Billing Plan Card */}
-        <Card className="border-2 border-primary shadow-md flex flex-col justify-between relative bg-card">
+        <Card className="border-2 border-primary shadow-sm flex flex-col justify-between relative bg-card">
           <div className="absolute top-2.5 right-2.5">
-            <Badge className="bg-primary text-primary-foreground text-[8px] font-bold uppercase py-0.5 px-2">Popular</Badge>
+            <Badge className="bg-primary text-primary-foreground text-[8px] font-bold uppercase py-0.5 px-2">
+              Popular
+            </Badge>
           </div>
           <CardHeader className="pb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Corporate Team</span>
@@ -469,20 +602,27 @@ const ComponentsShowcase: React.FC = () => {
             </div>
           </CardContent>
           <CardFooter className="border-t bg-muted/20 px-6 py-3">
-            <Button className="w-full text-xs font-bold cursor-pointer h-8" onClick={() => showToast("Upgrade process triggered!")}>Upgrade Tier</Button>
+            <Button
+              className="w-full text-xs font-bold cursor-pointer h-8"
+              onClick={() => showToast("Upgrade process triggered!")}
+            >
+              Upgrade Tier
+            </Button>
           </CardFooter>
         </Card>
       </div>
 
       {/* ========================================================
-          4. CORE INPUTS & SLIDERS GRID
+          4. CORE INPUTS & SHADCN SLIDERS GRID
          ======================================================== */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Form Selection togglers */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Selection Toggles & Sliders</CardTitle>
-            <CardDescription className="text-xs">Checkbox selections, Switch triggers, and custom Sliders.</CardDescription>
+            <CardDescription className="text-xs">
+              Checkbox selections, Switch triggers, and Shadcn Range Slider component.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex flex-col sm:flex-row gap-6">
@@ -503,22 +643,22 @@ const ComponentsShowcase: React.FC = () => {
 
             <Separator />
 
-            {/* Custom Slider component */}
-            <div className="space-y-2">
+            {/* Shadcn Slider component */}
+            <div className="space-y-3">
               <div className="flex justify-between items-center text-xs">
                 <label className="font-bold text-muted-foreground uppercase flex items-center gap-1.5">
                   <Sliders className="h-4 w-4 text-primary" />
                   Numerical Range Slider
                 </label>
-                <span className="font-extrabold text-foreground">{sliderVal}%</span>
+                <span className="font-extrabold text-foreground">{sliderVal[0]}%</span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
+              <Slider
+                min={0}
+                max={100}
+                step={1}
                 value={sliderVal}
-                onChange={(e) => setSliderVal(Number(e.target.value))}
-                className="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                onValueChange={setSliderVal}
+                className="py-1"
               />
             </div>
 
@@ -541,7 +681,7 @@ const ComponentsShowcase: React.FC = () => {
         </Card>
 
         {/* Dropdowns & Selects */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Select & Popovers</CardTitle>
             <CardDescription className="text-xs">Dropdown items and dates.</CardDescription>
@@ -585,11 +725,13 @@ const ComponentsShowcase: React.FC = () => {
           5. METERS, STEPPERS, & SELF-ALIGNING TIMELINES
          ======================================================== */}
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Progress & Meters */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        {/* Progress & Meters with Shadcn Progress */}
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Meters & Telemetry</CardTitle>
-            <CardDescription className="text-xs">Visual load states and usage ratios.</CardDescription>
+            <CardDescription className="text-xs">
+              Visual load states and usage ratios powered by Shadcn Progress.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             {/* Storage Progress */}
@@ -601,9 +743,7 @@ const ComponentsShowcase: React.FC = () => {
                 </span>
                 <span className="font-bold text-foreground">65% Used</span>
               </div>
-              <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
-                <div className="bg-primary h-full rounded-full transition-all duration-500" style={{ width: "65%" }} />
-              </div>
+              <Progress value={65} className="h-2" />
             </div>
 
             {/* Memory Usage Progress */}
@@ -612,9 +752,11 @@ const ComponentsShowcase: React.FC = () => {
                 <span className="font-semibold text-foreground">RAM Cache Load</span>
                 <span className="font-bold text-emerald-600">32% Load</span>
               </div>
-              <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
-                <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: "32%" }} />
-              </div>
+              <Progress
+                value={32}
+                className="h-2"
+                indicatorClassName="bg-emerald-500"
+              />
             </div>
 
             {/* Linear Step Indicator */}
@@ -634,8 +776,8 @@ const ComponentsShowcase: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Chronological Activity Feed / Timeline - FIXED VERTICAL LINE CASE */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all md:col-span-2">
+        {/* Chronological Activity Feed / Timeline */}
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all md:col-span-2">
           <CardHeader>
             <CardTitle className="text-base font-bold">Activity Timeline</CardTitle>
             <CardDescription className="text-xs">Log audit timeline feed.</CardDescription>
@@ -681,7 +823,6 @@ const ComponentsShowcase: React.FC = () => {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-600 border border-amber-200 shrink-0">
                   <AlertTriangle className="h-4 w-4" />
                 </div>
-                {/* Last item: omit/hide line or display small helper */}
                 <div className="w-0.5 flex-1 bg-transparent my-2"></div>
               </div>
               <div className="pb-2 pt-0.5">
@@ -697,11 +838,11 @@ const ComponentsShowcase: React.FC = () => {
       </div>
 
       {/* ========================================================
-          5. INPUTS, FILE UPLOADS, & OVERLAYS
+          6. INPUTS, FILE UPLOADS, & OVERLAYS
          ======================================================== */}
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Dropzone with Upload progress simulator */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        {/* Dropzone with Upload progress simulator via Shadcn Progress */}
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Enhanced Upload Dropzone</CardTitle>
             <CardDescription className="text-xs">Drag files with live upload indicators.</CardDescription>
@@ -722,51 +863,41 @@ const ComponentsShowcase: React.FC = () => {
                   <span className="font-semibold text-foreground truncate max-w-[70%]">{uploadedFile}</span>
                   <span className="font-bold text-primary">{uploadProgress}%</span>
                 </div>
-                <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
-                </div>
+                <Progress value={uploadProgress} className="h-2" />
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Collapsible FAQ/Accordions */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        {/* Collapsible FAQ/Accordions via Shadcn Accordion */}
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Accordions & FAQ</CardTitle>
-            <CardDescription className="text-xs">Expandable detail drawers.</CardDescription>
+            <CardDescription className="text-xs">
+              Expandable detail drawers using Shadcn Accordion.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2">
-            {FAQ_ITEMS.map((item, idx) => {
-              const isOpen = openAccordion === idx
-              return (
-                <div key={idx} className="border border-border rounded-lg overflow-hidden transition-all bg-card shadow-sm">
-                  <button
-                    onClick={() => setOpenAccordion(isOpen ? null : idx)}
-                    className="w-full p-3.5 flex items-center justify-between font-semibold text-xs text-foreground text-left hover:bg-muted/40 cursor-pointer"
-                  >
+          <CardContent>
+            <Accordion type="single" collapsible className="w-full space-y-2">
+              {FAQ_ITEMS.map((item) => (
+                <AccordionItem key={item.id} value={item.id}>
+                  <AccordionTrigger className="text-xs font-semibold">
                     <span className="flex items-center gap-2">
-                      <HelpCircle className="h-4.5 w-4.5 text-primary opacity-80" />
+                      <Info className="h-4 w-4 text-primary opacity-80" />
                       {item.q}
                     </span>
-                    <ChevronDown className={cn("h-4 w-4 transition-transform text-muted-foreground", isOpen && "rotate-180")} />
-                  </button>
-                  <div
-                    className={cn(
-                      "overflow-hidden transition-all duration-200 bg-muted/20 border-t border-border",
-                      isOpen ? "max-h-40 opacity-100 p-4" : "max-h-0 opacity-0 p-0 border-t-0"
-                    )}
-                  >
-                    <p className="text-xs text-muted-foreground leading-relaxed">{item.a}</p>
-                  </div>
-                </div>
-              )
-            })}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-xs text-muted-foreground leading-relaxed">
+                    {item.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </CardContent>
         </Card>
 
         {/* Dialog & Confirm overlays */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Overlays & Modals</CardTitle>
             <CardDescription className="text-xs">Dialog and AlertDialog confirm layouts.</CardDescription>
@@ -775,7 +906,9 @@ const ComponentsShowcase: React.FC = () => {
             {/* Standard Dialog */}
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="w-full text-xs font-semibold cursor-pointer">Open Modal Dialog</Button>
+                <Button variant="outline" className="w-full text-xs font-semibold cursor-pointer">
+                  Open Modal Dialog
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -794,7 +927,12 @@ const ComponentsShowcase: React.FC = () => {
                   <DialogClose asChild>
                     <Button variant="ghost">Cancel</Button>
                   </DialogClose>
-                  <Button onClick={() => { setDialogOpen(false); showToast("Workspace details updated!"); }}>
+                  <Button
+                    onClick={() => {
+                      setDialogOpen(false);
+                      showToast("Workspace details updated!");
+                    }}
+                  >
                     Save Configuration
                   </Button>
                 </DialogFooter>
@@ -804,7 +942,9 @@ const ComponentsShowcase: React.FC = () => {
             {/* Custom AlertDialog */}
             <Dialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="destructive" className="w-full text-xs font-semibold cursor-pointer">Trigger Alert Action</Button>
+                <Button variant="destructive" className="w-full text-xs font-semibold cursor-pointer">
+                  Trigger Alert Action
+                </Button>
               </DialogTrigger>
               <DialogContent className="max-w-[400px]">
                 <DialogHeader>
@@ -818,12 +958,17 @@ const ComponentsShowcase: React.FC = () => {
                 </DialogHeader>
                 <DialogFooter className="mt-4 gap-2 sm:gap-0">
                   <DialogClose asChild>
-                    <Button variant="outline" size="sm">Cancel</Button>
+                    <Button variant="outline" size="sm">
+                      Cancel
+                    </Button>
                   </DialogClose>
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => { setAlertDialogOpen(false); showToast("Logs deleted successfully!"); }}
+                    onClick={() => {
+                      setAlertDialogOpen(false);
+                      showToast("Logs deleted successfully!");
+                    }}
                   >
                     Confirm Deletion
                   </Button>
@@ -835,11 +980,11 @@ const ComponentsShowcase: React.FC = () => {
       </div>
 
       {/* ========================================================
-          6. MORE TABLES & VISUAL DIRECTORY
+          7. MORE TABLES & VISUAL DIRECTORY
          ======================================================== */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Table Type 1: Striped Audit Logs Table */}
-        <Card className="border border-border/70 shadow-sm md:col-span-2">
+        <Card className="border border-border/70 shadow-2xs md:col-span-2">
           <CardHeader>
             <CardTitle className="text-base font-bold">Striped Audit Logs Table</CardTitle>
             <CardDescription className="text-xs">Borders and zebra styling list tracking activities.</CardDescription>
@@ -884,19 +1029,31 @@ const ComponentsShowcase: React.FC = () => {
         </Card>
 
         {/* Compact Lists & Team Members status */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Team Directory</CardTitle>
             <CardDescription className="text-xs">Compact status list of coworkers.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {TEAM_MEMBERS.map((member, idx) => (
-              <div key={idx} className="flex items-center justify-between p-2.5 border rounded-lg bg-card shadow-sm hover:shadow transition-all">
+              <div
+                key={idx}
+                className="flex items-center justify-between p-2.5 border rounded-lg bg-card shadow-2xs hover:shadow transition-all"
+              >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <img src={member.avatar} alt={member.name} className="h-8.5 w-8.5 rounded-full border object-cover" />
+                  <Avatar className="h-8.5 w-8.5 border">
+                    <AvatarImage src={member.avatar} alt={member.name} className="object-cover" />
+                    <AvatarFallback className="text-xs font-bold">
+                      {member.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="min-w-0">
-                    <span className="text-xs font-bold text-foreground block truncate">{member.name}</span>
-                    <span className="text-[9px] text-muted-foreground block truncate">{member.role}</span>
+                    <span className="text-xs font-bold text-foreground block truncate">
+                      {member.name}
+                    </span>
+                    <span className="text-[9px] text-muted-foreground block truncate">
+                      {member.role}
+                    </span>
                   </div>
                 </div>
                 <Badge
@@ -918,17 +1075,19 @@ const ComponentsShowcase: React.FC = () => {
         </Card>
       </div>
 
-      {/* 7. SKELETONS & TOOLTIPS */}
+      {/* 8. SKELETONS & TOOLTIPS */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Tooltips & Badges */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Visual Tooltips & Badges</CardTitle>
             <CardDescription className="text-xs">Status tags and helper hovers.</CardDescription>
           </CardHeader>
           <CardContent className="flex gap-6 items-center">
             <div className="space-y-1.5">
-              <span className="text-xs font-bold text-muted-foreground uppercase block">Status Badges</span>
+              <span className="text-xs font-bold text-muted-foreground uppercase block">
+                Status Badges
+              </span>
               <div className="flex flex-wrap gap-1.5">
                 <Badge>Default</Badge>
                 <Badge variant="secondary">Secondary</Badge>
@@ -938,11 +1097,17 @@ const ComponentsShowcase: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <span className="text-xs font-bold text-muted-foreground uppercase block">Tooltips Hover</span>
+              <span className="text-xs font-bold text-muted-foreground uppercase block">
+                Tooltips Hover
+              </span>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-8 flex gap-1.5 text-xs font-semibold cursor-pointer">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 flex gap-1.5 text-xs font-semibold cursor-pointer"
+                    >
                       <Info className="h-4 w-4" />
                       Hover Me
                     </Button>
@@ -957,7 +1122,7 @@ const ComponentsShowcase: React.FC = () => {
         </Card>
 
         {/* Skeleton Loaders */}
-        <Card className="border border-border/70 shadow-sm hover:border-primary/20 transition-all">
+        <Card className="border border-border/70 shadow-2xs hover:border-primary/20 transition-all">
           <CardHeader>
             <CardTitle className="text-base font-bold">Skeleton Loading States</CardTitle>
             <CardDescription className="text-xs">Pulse animations simulating content load.</CardDescription>
@@ -965,11 +1130,17 @@ const ComponentsShowcase: React.FC = () => {
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-muted-foreground uppercase">Simulate API Loading</span>
-              <Button variant="outline" size="sm" className="h-7 text-xs font-medium cursor-pointer" onClick={triggerLoading} disabled={isLoadingDemo}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs font-medium cursor-pointer"
+                onClick={triggerLoading}
+                disabled={isLoadingDemo}
+              >
                 <Play className="h-3 w-3 mr-1" /> Trigger Pulse
               </Button>
             </div>
-            
+
             {isLoadingDemo ? (
               <div className="flex items-center space-x-4 p-3 border rounded-xl animate-in fade-in">
                 <Skeleton className="h-12 w-12 rounded-full" />
@@ -993,7 +1164,7 @@ const ComponentsShowcase: React.FC = () => {
         </Card>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ComponentsShowcase
+export default ComponentsShowcase;

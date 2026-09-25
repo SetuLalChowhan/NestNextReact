@@ -1,17 +1,18 @@
-import React from "react";
-import { Header } from "@/components/layout/Header/Header";
-import { Footer } from "@/components/layout/Footer";
 
-interface SiteLayoutProps {
-  children: React.ReactNode;
+import SiteLayout from '@/layout/SiteLayout'
+import React from 'react'
+
+
+interface Props {
+  children: React.ReactNode
 }
 
-export default function SiteLayout({ children }: SiteLayoutProps) {
+const layout = ({ children }: Props) => {
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
-  );
+    <SiteLayout>
+      {children}
+    </SiteLayout>
+  )
 }
+
+export default layout

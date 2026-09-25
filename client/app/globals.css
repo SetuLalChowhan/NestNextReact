@@ -1,41 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
-@import "../node_modules/tw-animate-css/dist/tw-animate.css";
+@import "tw-animate-css";
 @import "react-quill-new/dist/quill.snow.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* Fonts */
-  --font-sans: var(--font-sans), "Poppins", var(--font-bangla), "Noto Sans Bengali", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-bangla: var(--font-bangla), "Noto Sans Bengali", sans-serif;
+  /* font */
+  --font-sans: "Plus Jakarta Sans", sans-serif;
   --font-mono: "Geist Mono", monospace;
 
-  /* Mobile-first responsive breakpoints */
-  --breakpoint-xxs: 360px;
+  /* color */
+  --color-primary: var(--primary);
+  --color-bg-custom: linear-gradient(135deg, var(--background) 0%, var(--muted) 100%);
+
+  /* breakpoint */
+  --breakpoint-xxs: 390px;
   --breakpoint-xs: 480px;
-  --breakpoint-sm: 640px;
+  --breakpoint-sm: 650px;
   --breakpoint-md: 768px;
   --breakpoint-xmd: 992px;
   --breakpoint-lg: 1024px;
   --breakpoint-xlg: 1200px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
+  --breakpoint-xl: 1560px;
+  --breakpoint-xxl: 1920px;
   --breakpoint-3xl: 1920px;
 
-  /* Shadows: clean, subtle, trustworthy healthcare shadows */
-  --shadow-subtle: 0 1px 2px 0 rgb(15 23 42 / 0.04);
-  --shadow-card: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04);
-  --shadow-card-hover: 0 6px 18px -3px rgb(15 23 42 / 0.08), 0 2px 6px -2px rgb(15 23 42 / 0.04);
+  /* shadow */
+  --shadow-custom: 0px 4px 16.2px 2px rgba(0, 0, 0, 0.2);
 
-  /* Radius tokens */
-  --radius: 0.75rem;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  /* radius */
+  --radius: 0.5rem;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 
-  /* Animate */
+  /* letter spacing */
+  --tracking-custom: 10px;
+
+  /* line height */
+  --leading-custom: 50px;
+
+  /* blur */
+  --blur-custom: 4px;
+
+  /* animate */
   --animate-spin: spin 1s linear infinite;
 
   @keyframes spin {
@@ -50,60 +59,29 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-
-  /* Core Brand Colors */
-  --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
-  --color-primary-foreground: var(--primary-foreground);
-
-  --color-secondary: var(--secondary);
-  --color-secondary-dark: var(--secondary-dark);
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  /* Surfaces & Backgrounds */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-foreground: var(--surface-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-
-  /* Typography & Muted */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-body: var(--body);
-  --color-secondary-text: var(--secondary-text);
-  --color-main: var(--foreground);
-
-  /* Borders & Inputs */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-
-  /* Status Colors */
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
-  --color-error: var(--error);
-  --color-error-foreground: var(--error-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-
-  /* Charts */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-
-  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -115,418 +93,80 @@
 }
 
 :root {
-  /* Radius */
-  --radius: 0.75rem;
-
-  /* Brand Colors - Sophisticated Healthcare Palette */
-  --primary: #2563EB;             /* Primary Healthcare Blue */
-  --primary-dark: #1D4ED8;        /* Deep Healthcare Blue */
-  --primary-foreground: #FFFFFF;
-
-  --secondary: #0F766E;           /* Healthcare Teal */
-  --secondary-dark: #115E59;       /* Deep Healthcare Teal */
-  --secondary-foreground: #FFFFFF;
-
-  --accent: #EFF6FF;              /* Soft Light Blue Tint */
-  --accent-foreground: #1D4ED8;   /* High-contrast Deep Blue */
-
-  /* Background & Surfaces */
-  --background: #F8FAFC;          /* Soft Clean Healthcare Background */
-  --foreground: #0F172A;          /* Dark Navy Main Text */
-
-  --surface: #FFFFFF;             /* Pure White Surface */
-  --surface-foreground: #0F172A;
-
-  --card: #FFFFFF;
-  --card-foreground: #0F172A;
-
-  --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
-
-  /* Typography & Secondary Content */
-  --body: #334155;                /* Slate Text (High Legibility Body) */
-  --secondary-text: #64748B;      /* Muted Slate Secondary Text */
-  --muted: #F1F5F9;               /* Soft Surface Slate */
-  --muted-foreground: #64748B;    /* Muted Text */
-
-  /* Borders & Inputs */
-  --border: #E2E8F0;              /* Crisp Light Border */
-  --input: #E2E8F0;
-  --ring: #2563EB;                /* Healthcare Blue Focus */
-
-  /* Status Colors */
-  --success: #16A34A;             /* Clinical Success Green */
-  --success-foreground: #FFFFFF;
-
-  --warning: #D97706;             /* Clinical Amber Warning */
-  --warning-foreground: #FFFFFF;
-
-  --error: #DC2626;               /* Clinical Red */
-  --error-foreground: #FFFFFF;
-  --destructive: #DC2626;
-  --destructive-foreground: #FFFFFF;
-
-  /* Charts */
-  --chart-1: #2563EB;
-  --chart-2: #0F766E;
-  --chart-3: #0284C7;
-  --chart-4: #D97706;
-  --chart-5: #16A34A;
-
-  /* Sidebar */
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #0F172A;
-  --sidebar-primary: #2563EB;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #EFF6FF;
-  --sidebar-accent-foreground: #1D4ED8;
-  --sidebar-border: #E2E8F0;
-  --sidebar-ring: #2563EB;
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
-  /* Background & Surfaces */
-  --background: #0B1120;          /* Deep Navy Dark */
-  --foreground: #F8FAFC;          /* Crisp Warm White Text */
-
-  --surface: #1E293B;             /* Slate 800 Surface */
-  --surface-foreground: #F8FAFC;
-
-  --card: #131E30;                /* Deep Card Slate */
-  --card-foreground: #F8FAFC;
-
-  --popover: #131E30;
-  --popover-foreground: #F8FAFC;
-
-  /* Brand Colors (Adjusted for Dark Mode Accessibility) */
-  --primary: #3B82F6;             /* Bright Accessible Healthcare Blue */
-  --primary-dark: #2563EB;
-  --primary-foreground: #FFFFFF;
-
-  --secondary: #14B8A6;           /* Bright Accessible Teal */
-  --secondary-dark: #0D9488;
-  --secondary-foreground: #042F2E;
-
-  --accent: #1E293B;
-  --accent-foreground: #38BDF8;
-
-  /* Typography & Secondary Content */
-  --body: #94A3B8;                /* Slate 400 */
-  --secondary-text: #94A3B8;
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8;
-
-  /* Borders & Inputs */
-  --border: #334155;              /* Slate 700 */
-  --input: #334155;
-  --ring: #38BDF8;
-
-  /* Status Colors */
-  --success: #22C55E;
-  --success-foreground: #FFFFFF;
-
-  --warning: #F59E0B;
-  --warning-foreground: #FFFFFF;
-
-  --error: #EF4444;
-  --error-foreground: #FFFFFF;
-  --destructive: #EF4444;
-  --destructive-foreground: #FFFFFF;
-
-  /* Charts */
-  --chart-1: #3B82F6;
-  --chart-2: #14B8A6;
-  --chart-3: #38BDF8;
-  --chart-4: #F59E0B;
-  --chart-5: #22C55E;
-
-  /* Sidebar */
-  --sidebar: #0F172A;
-  --sidebar-foreground: #F8FAFC;
-  --sidebar-primary: #3B82F6;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #1E293B;
-  --sidebar-accent-foreground: #38BDF8;
-  --sidebar-border: #334155;
-  --sidebar-ring: #38BDF8;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-tap-highlight-color: transparent;
-    text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased min-h-screen;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
-
-  /* Accessible heading defaults */
-  h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground font-semibold tracking-tight;
-  }
-
-  p {
-    @apply text-body leading-relaxed;
-  }
-
-  /* Accessible focus indicators */
-  :focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }
-
-/* Typography utilities */
-.font-bangla {
-  font-family: var(--font-bangla), sans-serif;
-}
-
-.font-sans {
-  font-family: var(--font-sans), sans-serif;
-}
-
-/* Glassmorphic clean utility */
-.glass {
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.dark .glass {
-  background-color: rgba(19, 30, 48, 0.85);
-}
-
-/*
- * Interactive surface: restrained feedback via border + shadow.
- * Intentionally no vertical lift — it reads as a demo flourish, not a product.
- */
-.card-hover {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.card-hover:hover {
-  box-shadow: var(--shadow-card-hover);
-  border-color: color-mix(in srgb, var(--primary) 32%, var(--border));
-}
-
-/* Clean minimal scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #334155;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
-
-
-
-/*
- * Legacy full-width horizontal padding. Prefer `.container-page` for new work:
- * it caps content width so line-length stays readable on large screens.
- */
-.section-padding-x {
-  @apply px-4 sm:px-6 md:px-10 lg:px-16 2xl:px-24 w-full;
-}
-
-/* Consistent page container: professional content width, never full-bleed. */
-.container-page {
-  @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-8 lg:px-10;
-}
-
-/* Wider container for the dashboard shell (data-dense, but still bounded). */
-.container-dashboard {
-  @apply mx-auto w-full max-w-[1600px];
-}
-
-/*
- * Typographic scale.
- * Use these semantic classes for headers so hierarchy stays consistent across
- * the 30+ pages instead of ad-hoc text-size combinations.
- */
-.page-title {
-  @apply text-lg sm:text-xl font-semibold tracking-tight text-foreground;
-}
-
-.page-subtitle {
-  @apply text-xs sm:text-sm text-secondary-text leading-snug;
-}
-
-.section-title {
-  @apply text-base sm:text-lg font-semibold tracking-tight text-foreground;
-}
-
-.card-title {
-  @apply text-sm font-semibold tracking-tight text-foreground;
-}
-
-.meta-text {
-  @apply text-xs text-muted-foreground;
-}
-
-.eyebrow-text {
-  @apply text-[11px] font-semibold uppercase tracking-wider text-muted-foreground;
-}
-
-/*
- * Dense clinical workspace primitives.
- * The dashboard is a working surface, not a marketing page: flat panels, tight
- * rhythm, one accent colour, and typographic hierarchy instead of decoration.
- */
-/* Flat bordered surface used for every dashboard block. */
-.panel {
-  @apply rounded-lg border border-border bg-card;
-}
-
-/* Compact header row that sits inside a `.panel`. */
-.panel-header {
-  @apply flex items-center justify-between gap-3 border-b border-border px-4 py-3;
-}
-
-.panel-title {
-  @apply text-sm font-semibold tracking-tight text-foreground;
-}
-
-/* Uppercase micro-label for table heads and metric captions. */
-.data-label {
-  @apply text-[10px] font-semibold uppercase tracking-wider text-muted-foreground;
-}
-
-/* Large numeric readout in metric tiles. */
-.data-value {
-  @apply text-xl sm:text-2xl font-semibold tabular-nums tracking-tight text-foreground;
-}
-
-/* Single-row KPI strip: one panel, divided columns, no floating cards. */
-.kpi-strip {
-  @apply grid grid-cols-2 lg:grid-cols-4;
-}
-
-.kpi-cell {
-  @apply flex flex-col gap-1 px-4 py-3.5;
-}
-
-/* Neutral status pill. Colour is opt-in per state. */
-.status-chip {
-  @apply inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide;
-}
-
-/* Sidebar navigation item. */
-.nav-item {
-  @apply relative flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] font-medium text-secondary-text transition-colors hover:bg-muted hover:text-foreground;
-}
-
-.nav-item-active {
-  @apply bg-accent font-semibold text-accent-foreground hover:bg-accent hover:text-accent-foreground;
-}
-
-/* Left accent rail that marks the active nav item. */
-.nav-item-active::before {
-  content: "";
-  @apply absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-primary;
-}
-
-/* Horizontal toolbar row used above tables and lists. */
-.toolbar {
-  @apply flex flex-col gap-3 border-b border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between;
-}
-
-/* ─── React Quill Editor ───────────────────────────────────────────────────── */
-
-/* The wrapper div owns the border/radius; strip Quill's internal borders */
-.quill-wrapper .ql-toolbar {
-  border: none;
-  border-bottom: 1px solid hsl(var(--border));
-  background: hsl(var(--muted) / 0.4);
-  padding: 6px 8px;
-}
-
-.quill-wrapper .ql-container {
-  border: none;
-  min-height: 13rem;
-  font-size: 0.875rem;
-  font-family: inherit;
-  color: hsl(var(--foreground));
-  background: hsl(var(--background));
-}
-
-.quill-wrapper .ql-editor {
-  min-height: 13rem;
-  line-height: 1.7;
-  padding: 10px 14px;
-}
-
-.quill-wrapper .ql-editor.ql-blank::before {
-  color: hsl(var(--muted-foreground));
-  font-style: normal;
-  left: 14px;
-}
-
-/* ─── Blog prose — rendered dangerouslySetInnerHTML content ─────────────────── */
-
-.blog-prose {
-  @apply text-sm leading-relaxed text-foreground sm:text-base;
-}
-
-.blog-prose h1,
-.blog-prose h2 {
-  @apply mt-6 mb-3 text-xl font-semibold text-foreground;
-}
-
-.blog-prose h3 {
-  @apply mt-5 mb-2 text-lg font-semibold text-foreground;
-}
-
-.blog-prose p {
-  @apply mb-4 leading-relaxed;
-}
-
-.blog-prose ul,
-.blog-prose ol {
-  @apply my-4 space-y-2 pl-6;
-}
-
-.blog-prose ul {
-  @apply list-disc;
-}
-
-.blog-prose ol {
-  @apply list-decimal;
-}
-
-.blog-prose blockquote {
-  @apply my-5 rounded-r-lg border-l-4 border-primary bg-muted/40 py-3 pl-4 italic text-foreground;
-}
-
-.blog-prose strong {
-  @apply font-semibold text-foreground;
-}
-
-.blog-prose a {
-  @apply text-primary underline underline-offset-2 hover:text-primary/80;
-}

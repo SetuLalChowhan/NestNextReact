@@ -1,1 +1,4 @@
-export { ComponentsShowcase as default, ComponentsShowcase } from "./ComponentsShowcase";
+import ComponentsShowcase from "./ComponentsShowcase";
+
+export { ComponentsShowcase };
+export default ComponentsShowcase;

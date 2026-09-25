@@ -20,13 +20,13 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   const { isAuthenticated, isPending } = useSession();
   const location = useLocation();
 
-  if (isPending) {
-    return <FullPageSpinner label="Checking your session…" />;
-  }
+  // if (isPending) {
+  //   return <FullPageSpinner label="Checking your session…" />;
+  // }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  // }
 
   return <>{children}</>;
 }

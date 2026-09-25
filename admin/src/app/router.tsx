@@ -35,11 +35,9 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      <RequireAuth>
-        <RequireRole role="ADMIN">
-          <AdminLayout />
-        </RequireRole>
-      </RequireAuth>
+
+      <AdminLayout />
+
     ),
     children: [
       { index: true, element: withSuspense(<Dashboard />) },

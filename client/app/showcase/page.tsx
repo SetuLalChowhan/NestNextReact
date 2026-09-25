@@ -1,8 +1,9 @@
 import React from "react"
 import type { Metadata } from "next"
 import ComponentsShowcase from "@/components/showcase/ComponentsShowcase"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
+import Header from "@/shared/Header"
+import Footer from "@/shared/Footer"
+
 
 export const metadata: Metadata = {
   title: "UI Components Showcase - Boilerplate",

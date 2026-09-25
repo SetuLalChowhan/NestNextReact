@@ -1,12 +1,14 @@
 import React, { useState } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Import modular dashboard sub-components
-import StatsCards from "@/components/dashboard/StatsCards"
-import RevenueChart from "@/components/dashboard/RevenueChart"
-import DeviceChart from "@/components/dashboard/DeviceChart"
-import SalesChart from "@/components/dashboard/SalesChart"
-import TransactionsTable from "@/components/dashboard/TransactionsTable"
+// Import modular dashboard sub-components from overview folder
+import {
+  StatsCards,
+  RevenueChart,
+  DeviceChart,
+  SalesChart,
+  TransactionsTable,
+} from "@/components/dashboard/overview"
 
 const Dashboard: React.FC = () => {
   const [range, setRange] = useState<"daily" | "weekly" | "monthly">("weekly")
